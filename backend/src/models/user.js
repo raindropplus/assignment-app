@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs"
 
+// schema 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -11,8 +11,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please fill your email"],
     unique: true,
-    lowercase: true,
-    validate: [validator.isEmail, " Please provide a valid email"],
+    lowercase: true,   
   },
   image: {
      type: String,
@@ -49,8 +48,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// encrypt the password using 'bcryptjs'
-// Mongoose -> Document Middleware
 userSchema.pre("save", async function(next) {
   // check the password if it is modified
   if (!this.isModified("password")) {
@@ -71,4 +68,4 @@ userSchema.methods.correctPassword = async function( typedPassword, originalPass
 };
 
 const User = mongoose.model("User", userSchema);
-module.exports = User;
+export default User;

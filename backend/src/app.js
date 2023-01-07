@@ -1,16 +1,16 @@
-const express = require('express');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
-const hpp = require('hpp');
-const cors = require('cors');
+import express from "express";
+import  rateLimit  from "express-rate-limit";
+import  helmet  from "helmet";
+import  mongoSanitize from "express-mongo-sanitize";
+import  xss from "xss-clean";
+import  hpp  from "hpp";
+import  cors  from "cors";
+import configure from "./controllers";
+import { handleRequest, handleError } from "./middlewares/index";
+import dotenv from "dotenv";
 
-const loginRoutes = require('./routes/loginRoutes');
-const userRoutes = require('./routes/userRoutes');
-const contentRoutes = require('./routes/contentRoutes');
-const globalErrHandler = require('./controllers/errorController');
-const AppError = require('./utils/appError');
+dotenv.config();
+
 const app = express();
 
 // Allow Cross-Origin requests
@@ -41,18 +41,10 @@ app.use(xss());
 // Prevent parameter pollution
 app.use(hpp());
 
+app.use(handleRequest);
 
-// Routes
-app.use('/api/v1/', loginRoutes);
-app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/contents', contentRoutes);
+configure(app);
 
-// handle undefined Routes
-app.use('*', (req, res, next) => {
-    const err = new AppError(404, 'fail', 'undefined route');
-    next(err, req, res, next);
-});
+app.use(handleError);
 
-app.use(globalErrHandler);
-
-module.exports = app;
+export default app;
