@@ -18,7 +18,9 @@ export const update = async (user) => {
     const User = models.User;
     let model = await User.findById(id);
     if (model) {
-        model.username = user.username;
+        model.name = user.name;
+        model.image = user.image;
+        model.updatedAt =  Date.now;
         model.save();
         return model;
     }
@@ -40,5 +42,11 @@ export const deleteById = async (id) => {
 export const getUserById = async (id) => {
     const User = models.User;
     let model = await User.findById(id);
+    return model;
+}
+
+export const getUserByEmail = async (email) => {
+    const User = models.User;
+    let model = await User.findOne({email: email}).select("+password");
     return model;
 }

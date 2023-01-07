@@ -1,10 +1,64 @@
 import express from "express";
-import { saveUser, getAllUsers, update, deleteById, getUserById } from "../services/userService";
-import validators from "../models/view-models";
-import { handleValidation } from "../middlewares";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { saveUser, getAllUsers, update, deleteById, getUserById, getUserByEmail } from "../services/userService";
+// import validators from "../models/view-models";
+// import { handleValidation } from "../middlewares";
 import { NotFound } from '../utils/errors';
 
 const router = express.Router();
+
+const loginHandler = async (req, res, next) => {
+    try {
+        // Get user input
+        const { email, password } = req.body;
+        // Validate user input
+        if (!(email && password)) {
+            res.status(400).send("All input is required");
+        }
+
+        // Validate if user exist in our database
+        const user = await getUserByEmail(email);
+        console.log( user.password);
+        console.log(password);
+     
+      
+        if (user) {
+
+            if (user && (await bcrypt.compare(password, user.password))) {
+                // Create token
+                const token = jwt.sign(
+                    { user_id: user._id },
+                    process.env.JWT_SECRET,
+                    {
+                        expiresIn: process.env.JWT_EXPIRES_IN,
+                    }
+                );
+                
+                // save user token
+                user.token = token;
+
+                // user
+                res.status(200).send(user);
+
+            }
+            res.status(404).json({
+                status: 404,
+                message: "Invalid Password",
+            });
+        }
+        else {
+            res.status(404).json({
+                status: 404,
+                message: "Invalid User",
+            });
+
+        }
+
+    } catch (error) {
+        return next(error, req, res);
+    }
+};
 
 const getHandler = async (req, res, next) => {
     try {
@@ -59,7 +113,7 @@ const deleteHandler = async (req, res, next) => {
         return next(error, req, res);
     }
 }
-
+router.post('/login', loginHandler);
 router.get('/', getHandler);
 router.get('/:id', getByIdHandler);
 //router.post('/', handleValidation(validators.userSchemaValidate), postHandler);
@@ -68,7 +122,7 @@ router.put('/', putHandler);
 router.delete('/:id', deleteHandler);
 
 const configure = (app) => {
-    app.use('/users', router);
+    app.use('/api/v1/users', router);
 }
 
 export default configure;
