@@ -5,7 +5,7 @@ import  mongoSanitize from "express-mongo-sanitize";
 import  xss from "xss-clean";
 import  hpp  from "hpp";
 import  cors  from "cors";
-import configure from "./controllers";
+import configure from "./routes";
 import { handleRequest, handleError } from "./middlewares/index";
 import dotenv from "dotenv";
 
