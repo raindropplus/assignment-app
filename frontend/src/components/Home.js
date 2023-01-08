@@ -1,32 +1,24 @@
 import React, { useState, useEffect } from "react";
-
 import UserService from "../services/user.service";
 
 const Home = () => {
-  const [content, setContent] = useState("");
-  const [user, setUser] = useState([{id: "1", name: "a",},{id: "2", name: "b",},{id: "3", name: "c",},{id: "3", name: "c",}]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // UserService.getPublicContent().then(
-    //   (response) => {
-    //     setContent(response.data);
-    //   },
-    //   (error) => {
-    //     const _content =
-    //       (error.response && error.response.data) ||
-    //       error.message ||
-    //       error.toString();
-
-    //     setContent(_content);
-    //   }
-    // );
+     UserService.getUsers().then(
+       (response) => {
+        setUsers(response.data)
+        //  setContent(response.data);
+       },
+      
+     );
   }, []);
 
   return (
     <div className="container">
       <header className="jumbotron row">
         {/* <h3>{content}</h3> */}
-        {user.map(user =>{
+        {users.map(user =>{
           return (
             <div key={user.name} className="col-4">
               <ProfileCard name={user.name}/>

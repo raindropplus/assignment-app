@@ -67,5 +67,12 @@ userSchema.methods.correctPassword = async function( typedPassword, originalPass
   return await bcrypt.compare(typedPassword, originalPassword);
 };
 
+// Virtual populate
+userSchema.virtual('userContents', {
+  ref: 'UserContent',
+  foreignField: 'userId',
+  localField: '_id'
+});
+
 const User = mongoose.model("User", userSchema);
 export default User;

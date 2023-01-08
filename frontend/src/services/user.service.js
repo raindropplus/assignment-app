@@ -3,8 +3,8 @@ import authHeader from "./auth-header";
 
 const API_URL = "http://localhost:7000/api/v1/";
 
-const getPublicContent = () => {
-  return axios.get(API_URL + "all");
+const getUsers = () => {
+  return axios.get(API_URL + "users");
 };
 
 const getUserBoard = () => {
@@ -20,7 +20,7 @@ const getAdminBoard = () => {
 };
 
 const userService = {
-  getPublicContent,
+  getUsers,
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
