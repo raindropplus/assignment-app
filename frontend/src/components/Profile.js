@@ -23,6 +23,7 @@ const Profile = () => {
 
   useEffect(() => {
     getData()
+    // eslint-disable-next-line
   }, []);
 
 

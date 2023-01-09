@@ -26,6 +26,7 @@ const UserDtetails = () => {
 
   useEffect(() => {
     getData()
+    // eslint-disable-next-line
   }, []);
 
   return (
