@@ -4,6 +4,9 @@ import { GeneralError, BadRequest } from '../utils/errors';
 const config = process.env;
 
 export const verifyToken = (req, res, next) => {
+   if (config.ENVIRONMENT === 'TEST')
+     return next();
+
   const token =
     req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"];   
 
@@ -16,7 +19,7 @@ export const verifyToken = (req, res, next) => {
   }
   try {
     const tokens=token.split(' ')[1];
-    const decoded = jwt.verify(tokens, config.TOKEN_KEY);   
+    const decoded = jwt.verify(tokens, config.JWT_SECRET);   
     req.user = decoded;
   } catch (err) {    
     return res.status(403).json({

@@ -1,12 +1,13 @@
 export default function authHeader() {
+  debugger
   const user = JSON.parse(localStorage.getItem("user"));
 
-  if (user && user.accessToken) {
+  if (user && user.token) {
     // For Spring Boot back-end
-    // return { Authorization: "Bearer " + user.accessToken };
-
+     return { Authorization: "Bearer " + user.token };
+     
     // for Node.js Express back-end
-    return { "x-access-token": user.accessToken };
+    // return { "x-access-token": user.token };
   } else {
     return {};
   }

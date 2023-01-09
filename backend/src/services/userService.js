@@ -8,20 +8,23 @@ export const getAllUsers = async () => {
 }
 
 export const saveUser = async (user) => {
-    const model = new models.User(user);   
+    const model = new models.User(user);
     const savedUser = await model.save();
     return savedUser;
 };
 
-export const update = async (user) => {
+export const update = async (user) => {   
     const id = user._id;
     const User = models.User;
-    let model = await User.findById(id);
+    let model = await User.findByIdAndUpdate(id, user, {
+        new: true,
+        runValidators: true
+    });    
     if (model) {
-        model.name = user.name;
-        model.image = user.image;
-        model.updatedAt =  Date.now;
-        model.save();
+        // model.name = user.name;
+        // model.image = user.image;
+        // model.updatedAt = Date.now;
+        // model.save();
         return model;
     }
 
@@ -47,6 +50,6 @@ export const getUserById = async (id) => {
 
 export const getUserByEmail = async (email) => {
     const User = models.User;
-    let model = await User.findOne({email: email}).select("+password");
+    let model = await User.findOne({ email: email }).select("+password");
     return model;
 }

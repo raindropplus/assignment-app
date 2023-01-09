@@ -17,47 +17,45 @@ export const createToken = id => {
 
 export const loginHandler = async (req, res, next) => {
     try {
-        // Get user input
         const { email, password } = req.body;
-        // Validate user input
-        if (!(email && password)) {
-            res.status(400).send("All input is required");
+    
+        // 1) check if email and password exist
+        if (!email || !password) {
+          return next(
+            new AppError(404, "fail", "Please provide email or password"),
+            req,
+            res,
+            next,
+          );
         }
-
-        // Validate if user exist in our database
+    
+        // 2) check if user exist and password is correct
         const user = await getUserByEmail(email);
-
-        if (user) {
-
-            if (user && (await bcrypt.compare(password, user.password))) {
-                // 3) All correct, send jwt to client
-                const token = createToken(user.id);
-
-                // Remove the password from the output
-                user.password = undefined;
-
-                res.status(200).json({
-                    status: "success",
-                    token,
-                    data: {
-                        user,
-                    },
-                });
-
-            }
-            res.status(404).json({
-                status: 404,
-                message: "Invalid Password",
-            });
+    
+        if (!user || !(await user.correctPassword(password, user.password))) {
+          return next(
+            new AppError(401, "fail", "Email or Password is wrong"),
+            req,
+            res,
+            next,
+          );
         }
-        else {
-            res.status(404).json({
-                status: 404,
-                message: "Invalid User",
-            });
-        }
-
-    } catch (error) {
+    
+        // 3) All correct, send jwt to client
+        const token = createToken(user.id);
+    
+        // Remove the password from the output
+        user.password = undefined;
+    
+        res.status(200).json({
+          status: "success",
+          token,
+          data: {
+            user,
+          },
+        });
+      } catch (error) {
+             
         return next(error, req, res);
     }
 };

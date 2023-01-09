@@ -7,23 +7,51 @@ const getUsers = () => {
   return axios.get(API_URL + "users");
 };
 
-const getUserBoard = () => {
-  return axios.get(API_URL + "user", { headers: authHeader() });
+const getUsersDetails = (id) => {
+  return axios.get(API_URL + "users/"+id);
 };
 
-const getModeratorBoard = () => {
-  return axios.get(API_URL + "mod", { headers: authHeader() });
+const getUsersContentDetails = (id) => {
+  return axios.get(API_URL + "user-contents/user/"+id);
 };
 
-const getAdminBoard = () => {
-  return axios.get(API_URL + "admin", { headers: authHeader() });
+const createContent = (name, userId, url, image) => {
+  return axios.post(API_URL + "user-contents", {
+    name,
+    userId,
+    url,
+    image
+  },{ headers: authHeader() });
 };
+
+const updateContent = (_id, name, userId, url, image) => {
+  return axios.put(API_URL + "user-contents", {
+    _id,
+    name,
+    userId,
+    url,
+    image
+  },{ headers: authHeader() });
+};
+
+const getContentById = (id) => {
+  return axios.get(API_URL + "user-contents/"+id);
+};
+
+const updateUser = (user) => {
+  return axios.put(API_URL + "users", user,{ headers: authHeader() });
+};
+
 
 const userService = {
   getUsers,
-  getUserBoard,
-  getModeratorBoard,
-  getAdminBoard,
+  getUsersDetails,
+  getUsersContentDetails,
+  createContent,
+  getContentById,
+  updateContent,
+  updateUser
+
 };
 
 export default userService

@@ -17,8 +17,7 @@ const login = (email, password) => {
       email,
       password,
     })
-    .then((response) => {
-      debugger
+    .then((response) => {      
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }

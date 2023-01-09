@@ -5,7 +5,7 @@ import * as Yup from "yup";
 
 import { register } from "../slices/auth";
 import { clearMessage } from "../slices/message";
-import Pic from '../avatar_2x.png'
+import Pic from '../assets/avatar_2x.png'
 
 const Register = () => {
   const [successful, setSuccessful] = useState(false);

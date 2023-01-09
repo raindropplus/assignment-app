@@ -13,12 +13,15 @@ export const saveUserContent = async (user) => {
     return savedUserContent;
 };
 
-export const updateUserContent = async (user) => {
-    const id = user._id;
-    const User = models.UserContent;
-    let model = await UserContent.findById(id);
+export const updateUserContent = async (userContent) => {
+    const id = userContent._id;
+    const uc = models.UserContent;
+    let model = await uc.findById(id);
     if (model) {
-        model.username = user.username;
+        model.name = userContent.name;
+        //model.image = userContent.image;
+        model.url = userContent.url;
+        model.userId = userContent.userId;        
         model.save();
         return model;
     }
@@ -27,7 +30,7 @@ export const updateUserContent = async (user) => {
 }
 
 export const deleteById = async (id) => {
-    const User = models.User;
+    const User = models.UserContent;
     let model = await User.findById(id);
     if (model) {
         let result = await User.deleteOne({ _id: id });
@@ -38,7 +41,13 @@ export const deleteById = async (id) => {
 }
 
 export const getUserContentById = async (id) => {
-    const User = models.User;
+    const User = models.UserContent;
     let model = await User.findById(id);
+    return model;
+}
+
+export const getUserContentByUserId = async (id) => {
+    const User = models.UserContent;
+    let model = await User.find({userId:id});
     return model;
 }

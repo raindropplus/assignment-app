@@ -68,8 +68,8 @@ userSchema.methods.correctPassword = async function( typedPassword, originalPass
 };
 
 // Virtual populate
-userSchema.virtual('userContents', {
-  ref: 'UserContent',
+userSchema.virtual('userContentsdata', {
+  ref: 'usercontents',
   foreignField: 'userId',
   localField: '_id'
 });

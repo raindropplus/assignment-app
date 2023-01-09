@@ -1,59 +1,58 @@
-import React, { useState } from "react";
-import { Navigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import UserService from "../services/user.service";
+import ContentCard from "../common/ContentCard";
+import Pic from '../assets/avatar_2x.png'
 
-const UserDtetails = (parms) => {
-  const { user: currentUser } = useSelector((state) => state.auth);
-  const [userContent, setUserContent] = useState([
-    { id: "1", name: "a" },
-    { id: "2", name: "b" },
-    { id: "3", name: "c" },
-    { id: "3", name: "c" },
-  ]);
+const UserDtetails = () => {
+  const { id } = useParams();
+  const [userContents, setUserContents] = useState([]);
+  const [user, setUser] = useState({});
+
+  const getData = async () => {
+    try {
+      const userData = await UserService.getUsersDetails(id);
+      console.log(userData);
+      if (userData.status === 200) {
+        setUser(userData.data)
+        const contentData = await UserService.getUsersContentDetails(userData.data._id);
+        setUserContents(contentData.data);
+      }
+    } catch (error) {
+
+    }
+
+  }
+
+  useEffect(() => {
+    getData()
+  }, []);
 
   return (
     <div className="container">
       <div className="card card-container">
         <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+          src={Pic}
           alt="profile-img"
           className="profile-img-card"
         />
-        <h4>Details</h4>
+        <h4>{user.name}</h4>
       </div>
 
       <div className="container">
         <header className="row">
-          {/* <h3>{content}</h3> */}
-          {userContent.map((user) => {
+          {userContents?.length === 0 && <h6>No data found</h6>}
+          {userContents?.length > 0 && userContents.map((user) => {
             return (
               <div key={user.name} className="col-4">
-                <ProfileCard name={user.name} />
+                <ContentCard name={user.name} url={user.url} />
               </div>
             );
           })}
         </header>
       </div>
-    </div>
-  );
+    </div>);
 };
-function ProfileCard(params) {
-  return (
-    <div className="card card-container">
-      <img
-        src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-        alt="profile-img"
-        className="profile-img-card"
-      />
-      <h4>{params.name}</h4>
-      <Link to={"/home"} className="nav-link">
-      <span className="glyphicon glyphicon-edit" aria-hidden="true"></span>
-      </Link>
-      <button type="button" classNam="btn btn-default" aria-label="Left Align">
-        <span className="glyphicon glyphicon-edit" aria-hidden="true"></span>
-      </button>
-    </div>
-  );
-}
+
 
 export default UserDtetails;

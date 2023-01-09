@@ -1,26 +1,20 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
-import BoardUser from "./components/BoardUser";
 import UserDtetails from "./components/UserDetails";
-
-
 import { logout } from "./slices/auth";
-
 import EventBus from "./common/EventBus";
+import Content from "./components/Content";
+import UpdateProfile from "./components/UpdateProfile"
 
 const App = () => {
-  const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
-
   const { user: currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -30,11 +24,8 @@ const App = () => {
 
   useEffect(() => {
     if (currentUser) {
-      console.log(currentUser);
-      setShowModeratorBoard(currentUser.data.user.role.includes("moderator"));
       setShowAdminBoard(currentUser.data.user.role.includes("admin"));
     } else {
-      setShowModeratorBoard(false);
       setShowAdminBoard(false);
     }
 
@@ -50,21 +41,13 @@ const App = () => {
   return (
     <Router>
       <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">         
+        <nav className="navbar navbar-expand navbar-dark bg-dark">
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
               <Link to={"/home"} className="nav-link">
                 Home
               </Link>
             </li>
-
-            {showModeratorBoard && (
-              <li className="nav-item">
-                <Link to={"/mod"} className="nav-link">
-                  Moderator Board
-                </Link>
-              </li>
-            )}
 
             {showAdminBoard && (
               <li className="nav-item">
@@ -76,8 +59,8 @@ const App = () => {
 
             {currentUser && (
               <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
+                <Link to={"/profile"} className="nav-link">
+                  My Content
                 </Link>
               </li>
             )}
@@ -87,7 +70,7 @@ const App = () => {
             <div className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link to={"/profile"} className="nav-link">
-                  {currentUser.username}
+                  {currentUser.data.user.name}
                 </Link>
               </li>
               <li className="nav-item">
@@ -119,10 +102,11 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/user" element={<BoardUser />} />
-            <Route path="/user-details" element={<UserDtetails />} />
-      
+            <Route path="/profile" element={<Profile />} />           
+            <Route path="/user-details/:id" element={<UserDtetails />} />
+            <Route path="/content/:id" element={<Content />} />
+            <Route path="/content" element={<Content />} />
+            <Route path="/update-profile/:id" element={<UpdateProfile />} /> 
           </Routes>
         </div>
       </div>
