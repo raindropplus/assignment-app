@@ -45,6 +45,10 @@ app.use(handleRequest);
 
 configure(app);
 
+app.get("/", (req, res, next) => {
+    res.status(200).json({ message: "valid response"})
+})
+
 app.use(handleError);
 
 export default app;
