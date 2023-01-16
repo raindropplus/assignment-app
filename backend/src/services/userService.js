@@ -14,17 +14,12 @@ export const saveUser = async (user) => {
 };
 
 export const update = async (user) => {   
-    const id = user._id;
-    const User = models.User;
+    const id = user._id;   
     let model = await User.findByIdAndUpdate(id, user, {
         new: true,
         runValidators: true
     });    
-    if (model) {
-        // model.name = user.name;
-        // model.image = user.image;
-        // model.updatedAt = Date.now;
-        // model.save();
+    if (model) {    
         return model;
     }
 
