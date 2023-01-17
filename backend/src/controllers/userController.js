@@ -37,7 +37,8 @@ export const postHandler = async (req, res, next) => {
 
 export const putHandler = async (req, res, next) => {
     try {
-        const body = req.body;
+        const body = req.body;  
+        console.log(body);     
         const user = await update(body);
         res.status(200).send(user._id);
     } catch (error) {

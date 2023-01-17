@@ -15,6 +15,7 @@ export const saveUser = async (user) => {
 
 export const update = async (user) => {   
     const id = user._id;   
+    const User = models.User;
     let model = await User.findByIdAndUpdate(id, user, {
         new: true,
         runValidators: true
